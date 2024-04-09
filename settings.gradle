@@ -1,0 +1,6 @@
+rootProject.name = 'web-os2'
+
+include 'web-os-server'
+include 'web-os-core'
+include 'web-os-simple-web'
+

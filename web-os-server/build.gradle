@@ -1,0 +1,23 @@
+plugins {
+    id 'java'
+}
+
+group = 'cn.donting.web.os'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-server
+    implementation 'org.eclipse.jetty:jetty-webapp:9.4.49.v20220914'
+
+
+//    testImplementation platform('org.junit:junit-bom:5.9.1')
+//    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+test {
+    useJUnitPlatform()
+}
