@@ -1,4 +1,4 @@
-package cn.donting.web.os;
+package cn.donting.web.os.core.server.servlet;
 
 import javax.servlet.*;
 import javax.servlet.descriptor.JspConfigDescriptor;
@@ -10,7 +10,7 @@ import java.util.EventListener;
 import java.util.Map;
 import java.util.Set;
 
-public class MyServletContext implements ServletContext {
+public class JettyServletContext implements ServletContext {
     @Override
     public String getContextPath() {
         return null;

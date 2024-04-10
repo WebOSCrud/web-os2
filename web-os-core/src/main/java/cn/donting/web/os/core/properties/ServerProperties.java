@@ -1,7 +1,7 @@
-package cn.donting.web.os.properties;
+package cn.donting.web.os.core.properties;
 
 public class ServerProperties {
-    int port=8080;
+    int port=8081;
 
     public int getPort() {
         return port;

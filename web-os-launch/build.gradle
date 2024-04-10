@@ -11,7 +11,8 @@ repositories {
 
 dependencies {
     // https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-server
-    implementation 'org.eclipse.jetty:jetty-webapp:9.4.49.v20220914'
+//    implementation 'org.eclipse.jetty:jetty-webapp:9.4.49.v20220914'
+    implementation  "javax.servlet:javax.servlet-api:4.0.1"
 
 
 //    testImplementation platform('org.junit:junit-bom:5.9.1')

@@ -26,10 +26,16 @@ public class HttpRequestMappingHandle {
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
-
+    /**
+     *
+     * @param httpRequest
+     * @param declaredMethod
+     * @param target
+     */
     public HttpRequestMappingHandle(HttpRequestMapping httpRequest, Method declaredMethod, Object target) {
-        this.declaredMethod = declaredMethod;
+        this.declaredMethod = null;
         List<ParHandel> parHandels = new ArrayList<>();
+        //第一次 getParameters 比较慢jvm 需要加载反射相关的类
         for (Parameter parameter : declaredMethod.getParameters()) {
             RequestParam requestParam = parameter.getAnnotation(RequestParam.class);
             if (requestParam != null) {

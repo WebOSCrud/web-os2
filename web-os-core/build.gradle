@@ -11,9 +11,9 @@ repositories {
 }
 
 dependencies {
-    compileOnly project(":web-os-server")
+    compileOnly project(":web-os-launch")
     implementation project(":web-os-simple-web")
-    implementation  "javax.servlet:javax.servlet-api:4.0.1"
+    implementation 'org.eclipse.jetty:jetty-webapp:9.4.49.v20220914'
 
 //    implementation 'org.springframework.boot:spring-boot-starter-web'
 //    implementation 'org.springframework.boot:spring-boot-starter-jetty'
