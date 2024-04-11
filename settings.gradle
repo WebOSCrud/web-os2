@@ -3,4 +3,5 @@ rootProject.name = 'web-os2'
 include 'web-os-launch'
 include 'web-os-core'
 include 'web-os-simple-web'
+include 'web-os-api'
 

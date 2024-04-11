@@ -5,6 +5,7 @@ import cn.donting.web.os.core.server.servlet.DispatcherServlet;
 import cn.donting.web.os.web.annotation.Autowired;
 import cn.donting.web.os.web.annotation.Service;
 import cn.donting.web.os.web.ioc.ApplicationRunner;
+import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.AbstractHandler;
@@ -14,8 +15,8 @@ import org.eclipse.jetty.util.log.Log;
 import org.eclipse.jetty.util.log.Logger;
 
 @Service
+@Slf4j
 public class WebOsJettyServer implements ApplicationRunner {
-    private static final Logger logger = Log.getLogger(WebOsJettyServer.class);
 
     @Autowired
     DispatcherServlet dispatcherServlet;
@@ -32,7 +33,7 @@ public class WebOsJettyServer implements ApplicationRunner {
             server.setHandler(contextHandler);
             server.start();
             long end = System.currentTimeMillis();
-            logger.info("jetty start:[" + serverProperties.getPort() + "]  "+(end-l)+"ms");
+//            log("jetty start:[" + serverProperties.getPort() + "]  "+(end-l)+"ms");
         } catch (Exception ex) {
             ex.printStackTrace();
             throw new RuntimeException(ex);

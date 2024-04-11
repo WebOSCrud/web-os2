@@ -15,19 +15,18 @@ dependencies {
     implementation project(":web-os-simple-web")
     implementation 'org.eclipse.jetty:jetty-webapp:9.4.49.v20220914'
 
+
+    compileOnly 'org.projectlombok:lombok:1.18.8'
+    annotationProcessor 'org.projectlombok:lombok:1.18.8'
 //    implementation 'org.springframework.boot:spring-boot-starter-web'
 //    implementation 'org.springframework.boot:spring-boot-starter-jetty'
 //    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
-tasks.named('test') {
-    useJUnitPlatform()
-}
-
-task 'classpath.dev'{
+task 'classpath.dev'(dependsOn: ['build']){
     doFirst {
         def classpath = sourceSets.main.runtimeClasspath
-        def content = "cn.donting.web.os.core.OsCoreApplication\n"
+        def content = "cn.donting.web.os.core.WebOsCoreApplication\n"
         classpath.forEach {
             content+=it.getPath()+"\n";
         }
