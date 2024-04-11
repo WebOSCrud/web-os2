@@ -1,0 +1,16 @@
+plugins {
+    id 'java'
+}
+
+group = 'cn.donting.web.os'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compileOnly 'org.projectlombok:lombok:1.18.8'
+    annotationProcessor 'org.projectlombok:lombok:1.18.8'
+}
+
