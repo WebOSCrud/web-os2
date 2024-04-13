@@ -21,7 +21,8 @@ public class WapWindow {
     private String name;
 
     /**
-     *
+     * icon Resource 路径 {@link ClassLoader#getResource} 能够加载
+     * @see ClassLoader#getResource(String)
      */
     @Nullable
     private String iconResource;

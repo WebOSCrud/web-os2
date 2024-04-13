@@ -13,7 +13,9 @@ repositories {
 dependencies {
     compileOnly project(":web-os-launch")
     implementation project(":web-os-simple-web")
+    implementation project(":web-os-api")
     implementation 'org.eclipse.jetty:jetty-webapp:9.4.49.v20220914'
+    implementation 'ch.qos.logback:logback-classic:1.2.3'
 
 
     compileOnly 'org.projectlombok:lombok:1.18.8'

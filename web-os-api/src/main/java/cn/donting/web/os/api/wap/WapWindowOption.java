@@ -121,6 +121,13 @@ public class WapWindowOption {
     WindowType windowType;
 
     public static enum WindowType{
-        tool,normal
+        /**
+         * 工具类窗口
+         */
+        TOOL,
+        /**
+         * 常规窗口
+         */
+        NORMAL
     }
 }

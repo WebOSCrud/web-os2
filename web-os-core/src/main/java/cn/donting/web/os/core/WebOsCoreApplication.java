@@ -6,7 +6,7 @@ public class WebOsCoreApplication  {
    private static SimpleWebIocApplication simpleIocApplication;
    public static void main(String[] args) throws Exception {
        simpleIocApplication=new SimpleWebIocApplication();
-       simpleIocApplication.run(WebOsCoreApplication.class);
+       simpleIocApplication.run(WebOsCoreApplication.class,args);
    }
 
 }

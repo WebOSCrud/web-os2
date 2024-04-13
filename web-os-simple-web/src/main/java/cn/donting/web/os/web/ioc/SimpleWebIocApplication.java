@@ -7,7 +7,10 @@ import cn.donting.web.os.web.http.HttpMethod;
 import cn.donting.web.os.web.http.HttpRequestMapping;
 import cn.donting.web.os.web.http.HttpRequestMappingHandle;
 import cn.donting.web.os.web.http.HttpRequestMappingParse;
+import cn.donting.web.os.web.log.AnsiOutput;
+import cn.donting.web.os.web.log.LoggerConfig;
 import cn.donting.web.os.web.util.PackageScanner;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,21 +22,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
-
+@Slf4j
 public class SimpleWebIocApplication {
-    private static final Logger logger = Logger.getLogger(SimpleWebIocApplication.class.getName());
 
     private Map<String, Object> beans = new ConcurrentHashMap<>();
     private Map<HttpRequestMapping, HttpRequestMappingHandle> requestMappingHandleMap = new ConcurrentHashMap<>();
 
-    public void run(Class<?> mainClass) throws Exception {
+    public void run(Class<?> mainClass,String[] args) throws Exception {
+        //开启彩色日志
+        AnsiOutput.setEnabled(AnsiOutput.Enabled.ALWAYS);
         long l = System.currentTimeMillis();
         iocInit(mainClass);
         long end = System.currentTimeMillis();
-        logger.log(Level.INFO,"start 耗时："+(end-l));
+        log.info("start 耗时："+(end-l));
     }
     private void iocInit(Class<?> mainClass) throws Exception {
         beans.put("SimpleWebIocApplication",this);

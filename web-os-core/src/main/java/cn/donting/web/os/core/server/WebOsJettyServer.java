@@ -33,7 +33,7 @@ public class WebOsJettyServer implements ApplicationRunner {
             server.setHandler(contextHandler);
             server.start();
             long end = System.currentTimeMillis();
-//            log("jetty start:[" + serverProperties.getPort() + "]  "+(end-l)+"ms");
+            log.info("jetty start:[{}]  {}ms",serverProperties.getPort(),end-l);
         } catch (Exception ex) {
             ex.printStackTrace();
             throw new RuntimeException(ex);
