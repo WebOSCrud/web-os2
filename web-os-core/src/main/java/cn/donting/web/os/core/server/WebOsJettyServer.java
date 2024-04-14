@@ -25,22 +25,20 @@ public class WebOsJettyServer implements ApplicationRunner {
 
     @Autowired
     UserMapper userMapper;
+
     @Override
-    public void applicationRun() {
-        try {
-            long l = System.currentTimeMillis();
-            ServerProperties serverProperties = new ServerProperties();
-            Server server = new Server(serverProperties.getPort());
-            ServletContextHandler contextHandler = new ServletContextHandler(server, "/", false, false);
-            ServletHolder servletHolder = new ServletHolder(dispatcherServlet);
-            contextHandler.addServlet(servletHolder, "/");
-            server.setHandler(contextHandler);
-            server.start();
-            long end = System.currentTimeMillis();
-            log.info("jetty start:[{}]  {}ms",serverProperties.getPort(),end-l);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            throw new RuntimeException(ex);
-        }
+    public void applicationRun() throws Exception {
+
+        long l = System.currentTimeMillis();
+        ServerProperties serverProperties = new ServerProperties();
+        Server server = new Server(serverProperties.getPort());
+        ServletContextHandler contextHandler = new ServletContextHandler(server, "/", false, false);
+        ServletHolder servletHolder = new ServletHolder(dispatcherServlet);
+        contextHandler.addServlet(servletHolder, "/");
+        server.setHandler(contextHandler);
+        server.start();
+        long end = System.currentTimeMillis();
+        log.info("jetty start:[{}]  {}ms", serverProperties.getPort(), end - l);
+
     }
 }

@@ -109,7 +109,6 @@ public class SimpleWebIocApplication {
                 ((ApplicationRunner) value).applicationRun();
             }
         }
-
     }
 
 

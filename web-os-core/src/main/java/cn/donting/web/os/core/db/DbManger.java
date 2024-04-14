@@ -102,6 +102,7 @@ public class DbManger {
             Connection connection = getConnection();
             connection.commit();
             connection.setAutoCommit(true);
+            DbManger.releaseConnection();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

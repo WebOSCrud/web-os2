@@ -5,10 +5,16 @@ import cn.donting.web.os.api.FileSpaceApi;
 import cn.donting.web.os.api.UserApi;
 import cn.donting.web.os.api.WapApi;
 import cn.donting.web.os.api.WebOsApi;
+import cn.donting.web.os.web.annotation.Autowired;
 import cn.donting.web.os.web.annotation.Service;
 
 @Service
 public class OsApi implements WebOsApi {
+    @Autowired
+    UserApi userApi;
+
+    @Autowired
+    FileSpaceApi fileSpaceApi;
 
     public OsApi() {
         WebOsLaunch.setWebOsApi(this);
@@ -16,12 +22,12 @@ public class OsApi implements WebOsApi {
 
     @Override
     public UserApi userApi() {
-        return null;
+        return userApi;
     }
 
     @Override
     public FileSpaceApi fileSpaceApi() {
-        return null;
+        return fileSpaceApi;
     }
 
     @Override
