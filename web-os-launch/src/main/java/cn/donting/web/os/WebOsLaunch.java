@@ -20,6 +20,12 @@ public class WebOsLaunch {
             throw new RuntimeException("暂不支持");
         }
         webOsCoreLaunch.launch(args);
+    }
 
+    public static void setWebOsApi(WebOsApi webOsApi) {
+        if(WebOsLaunch.webOsApi!=null){
+            return;
+        }
+        WebOsLaunch.webOsApi = webOsApi;
     }
 }

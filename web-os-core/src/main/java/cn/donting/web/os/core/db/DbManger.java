@@ -15,13 +15,20 @@ import java.util.Enumeration;
 import java.util.List;
 
 @Service
-public class DbManger implements ApplicationRunner {
+public class DbManger {
 
-    private static DbProperties staticDbProperties;
+    private static int MAX_CONNECTION = 5;
 
-    private static int MAX_CONNECTION=5;
+    private static DbManger instance;
+
     @Autowired
-    DbProperties dbProperties;
+    private DbProperties dbProperties;
+
+    public DbManger() {
+        instance = this;
+    }
+
+
     /**
      * 可用的连接
      */
@@ -35,6 +42,7 @@ public class DbManger implements ApplicationRunner {
 
     /**
      * 获取连接
+     *
      * @return
      */
     public static Connection getConnection() {
@@ -42,22 +50,22 @@ public class DbManger implements ApplicationRunner {
         if (connection != null) {
             return connection;
         }
-        synchronized (DbManger.class){
-            if (connections.size()>0) {
-                connection=connections.remove(0);
-            }else {
-                if (allConnections.size()<MAX_CONNECTION) {
-                    connection= getConnection();
+        synchronized (DbManger.class) {
+            if (connections.size() > 0) {
+                connection = connections.remove(0);
+            } else {
+                if (allConnections.size() < MAX_CONNECTION) {
+                    connection = newConnection();
                     allConnections.add(connection);
-                }else {
-                    while (connections.size()==0){
+                } else {
+                    while (connections.size() == 0) {
                         try {
                             Thread.sleep(5);
                         } catch (InterruptedException e) {
                             throw new RuntimeException(e);
                         }
                     }
-                    connection=connections.remove(0);
+                    connection = connections.remove(0);
                     allConnections.add(connection);
                 }
             }
@@ -69,18 +77,42 @@ public class DbManger implements ApplicationRunner {
     /**
      * 归还连接
      */
-    public static void releaseConnection(){
+    public static void releaseConnection() {
         Connection connection = connectionThreadLocal.get();
         connectionThreadLocal.remove();
         connections.add(connection);
     }
-    private  Connection connectionDb() throws SQLException {
-        return DriverManager.getConnection(staticDbProperties.getUrl(), staticDbProperties.getUsername(), staticDbProperties.getPassword());
+
+    /**
+     * 开始事务
+     */
+    public static void beginTransaction() {
+        try {
+            getConnection().setAutoCommit(false);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    @Override
-    public void applicationRun() throws Exception {
-        DbManger.staticDbProperties = this.dbProperties;
-        connectionDb();
+    /**
+     * 提交事务
+     */
+    public static void commit() {
+        try {
+            Connection connection = getConnection();
+            connection.commit();
+            connection.setAutoCommit(true);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
+
+    private static Connection newConnection() {
+        try {
+            return DriverManager.getConnection(instance.dbProperties.getUrl()+";DATABASE_TO_UPPER=false;SCHEMA=PUBLIC", instance.dbProperties.getUsername(), instance.dbProperties.getPassword());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

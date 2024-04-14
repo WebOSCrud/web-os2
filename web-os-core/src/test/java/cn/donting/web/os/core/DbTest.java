@@ -24,12 +24,12 @@ public class DbTest {
                 dynamicProxy
         );
 
-        Connection conn1 = DriverManager.getConnection("jdbc:h2:file:./.idea/h21.db");
-        Connection conn2 = DriverManager.getConnection("jdbc:h2:file:./.idea/h21.db");
-        Statement statement = conn1.createStatement();
-        Statement statement1 = conn2.createStatement();
-        System.out.printf("", statement1);
-        System.out.printf("", statement);
+        OsUser entity = new OsUser();
+        entity.setUsername("123");
+        entity.setPassword("123");
+        entity.setDescription("描述");
+        entity.setCreatTime(System.currentTimeMillis());
+        myInterface.save(entity);
 //        conn1.
     }
 

@@ -8,6 +8,8 @@ import cn.donting.web.os.web.http.HttpMethod;
 import cn.donting.web.os.web.http.HttpRequestMapping;
 import cn.donting.web.os.web.http.HttpRequestMappingHandle;
 import cn.donting.web.os.web.http.HttpRequestMappingParse;
+import cn.donting.web.os.web.ioc.annotation.BeanImport;
+import cn.donting.web.os.web.ioc.annotation.Import;
 import cn.donting.web.os.web.log.AnsiOutput;
 import cn.donting.web.os.web.log.LoggerConfig;
 import cn.donting.web.os.web.util.PackageScanner;
@@ -38,8 +40,8 @@ public class SimpleWebIocApplication {
     }
     private void iocInit(Class<?> mainClass) throws Exception {
         beans.put("SimpleWebIocApplication",this);
-        List<Class<?>> classes = PackageScanner.scanPackage(mainClass.getPackage().getName());
-        classes = classes.stream().filter(c -> {
+        List<Class> classes = PackageScanner.scanPackage(mainClass.getPackage().getName());
+        List<Class> beanClasses = classes.stream().filter(c -> {
             if (c.getAnnotation(RestController.class) != null) {
                 return true;
             }
@@ -52,7 +54,7 @@ public class SimpleWebIocApplication {
             return false;
         }).collect(Collectors.toList());
 
-        for (Class<?> aClass : classes) {
+        for (Class<?> aClass : beanClasses) {
             Object newInstance = aClass.newInstance();
             registerBeans(newInstance);
         }
@@ -69,6 +71,18 @@ public class SimpleWebIocApplication {
                         throw new RuntimeException(handle.getHttpRequest() + "重复");
                     }
                     requestMappingHandleMap.put(handle.getHttpRequest(), handle);
+                }
+            }
+        }
+        //自定义导入
+        Import anImport = mainClass.getAnnotation(Import.class);
+        if(anImport!=null){
+            for (Class<? extends BeanImport> aClass : anImport.beanImport()) {
+                BeanImport beanImport = aClass.newInstance();
+                Map<String, Object> stringObjectMap = beanImport.importBeans(classes);
+                Set<Map.Entry<String, Object>> entries = stringObjectMap.entrySet();
+                for (Map.Entry<String, Object> entry : entries) {
+                    registerBeans(entry.getKey(),entry.getValue());
                 }
             }
         }
@@ -89,13 +103,13 @@ public class SimpleWebIocApplication {
             }
         }
 
-
         //ApplicationRunner
         for (Object value : beans.values()) {
             if (value instanceof ApplicationRunner) {
                 ((ApplicationRunner) value).applicationRun();
             }
         }
+
     }
 
 
@@ -142,10 +156,12 @@ public class SimpleWebIocApplication {
     }
 
     public void registerBeans(Object object){
-        Class<?> aClass = object.getClass();
-        if (beans.containsKey(aClass.getSimpleName())) {
-            throw new RuntimeException(aClass.getSimpleName() + " 重复");
+        registerBeans(object.getClass().getSimpleName(),object);
+    }
+    public void registerBeans(String beanName,Object object){
+        if (beans.containsKey(beanName)) {
+            throw new RuntimeException(beanName + " "+object.getClass().getName()+"重复");
         }
-        beans.put(aClass.getSimpleName(), object);
+        beans.put(beanName, object);
     }
 }

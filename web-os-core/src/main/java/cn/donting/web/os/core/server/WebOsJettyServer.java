@@ -1,5 +1,7 @@
 package cn.donting.web.os.core.server;
 
+import cn.donting.web.os.core.db.entity.OsUser;
+import cn.donting.web.os.core.db.mapper.UserMapper;
 import cn.donting.web.os.core.properties.ServerProperties;
 import cn.donting.web.os.core.server.servlet.DispatcherServlet;
 import cn.donting.web.os.web.annotation.Autowired;
@@ -21,6 +23,8 @@ public class WebOsJettyServer implements ApplicationRunner {
     @Autowired
     DispatcherServlet dispatcherServlet;
 
+    @Autowired
+    UserMapper userMapper;
     @Override
     public void applicationRun() {
         try {

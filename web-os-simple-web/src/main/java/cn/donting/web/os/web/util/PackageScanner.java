@@ -14,7 +14,7 @@ public class PackageScanner {
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         String packageName = "cn.donting.web.os.web"; // 指定要扫描的包路径
 
-        List<Class<?>> classes = scanPackage(packageName);
+        List<Class> classes = scanPackage(packageName);
 
         // 打印扫描到的类名
         for (Class<?> clazz : classes) {
@@ -22,8 +22,8 @@ public class PackageScanner {
         }
     }
 
-    public static List<Class<?>> scanPackage(String packageName) throws IOException, ClassNotFoundException {
-        List<Class<?>> classes = new ArrayList<>();
+    public static List<Class> scanPackage(String packageName) throws IOException, ClassNotFoundException {
+        List<Class> classes = new ArrayList<>();
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         String path = packageName.replace('.', '/');
 
