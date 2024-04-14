@@ -7,13 +7,13 @@ public class User {
     /**
      * 用户名
      */
-    String username;
+    private String username;
     /**
      * 用户描述
      */
-    String description;
+    private String description;
     /**
      * 创建时间
      */
-    long creatTime;
+    private Long creatTime;
 }

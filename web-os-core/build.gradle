@@ -17,6 +17,7 @@ dependencies {
     implementation 'org.eclipse.jetty:jetty-webapp:9.4.49.v20220914'
     implementation 'ch.qos.logback:logback-classic:1.2.3'
 
+    implementation 'com.h2database:h2:2.1.210'
 
     compileOnly 'org.projectlombok:lombok:1.18.8'
     annotationProcessor 'org.projectlombok:lombok:1.18.8'

@@ -1,6 +1,7 @@
 package cn.donting.web.os.web.ioc;
 
 import cn.donting.web.os.web.annotation.Autowired;
+import cn.donting.web.os.web.annotation.Properties;
 import cn.donting.web.os.web.annotation.RestController;
 import cn.donting.web.os.web.annotation.Service;
 import cn.donting.web.os.web.http.HttpMethod;
@@ -18,9 +19,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 @Slf4j
@@ -47,16 +46,19 @@ public class SimpleWebIocApplication {
             if (c.getAnnotation(Service.class) != null) {
                 return true;
             }
+            if (c.getAnnotation(Properties.class) != null) {
+                return true;
+            }
             return false;
         }).collect(Collectors.toList());
 
         for (Class<?> aClass : classes) {
             Object newInstance = aClass.newInstance();
-            if (beans.containsKey(aClass.getSimpleName())) {
-                throw new RemoteException(aClass.getSimpleName() + " 重复");
-            }
-            beans.put(aClass.getSimpleName(), newInstance);
+            registerBeans(newInstance);
         }
+
+        PropertiesLoader.loader(this);
+
         //RestController 可以延迟加载降低启动时间
         for (Object value : beans.values()) {
             RestController annotation = value.getClass().getAnnotation(RestController.class);
@@ -131,5 +133,19 @@ public class SimpleWebIocApplication {
             throw new RuntimeException(aClass + " 没有找到");
         }
         return list;
+    }
+
+
+    public List getAllBeans(){
+        Collection<Object> values = beans.values();
+        return new ArrayList(values);
+    }
+
+    public void registerBeans(Object object){
+        Class<?> aClass = object.getClass();
+        if (beans.containsKey(aClass.getSimpleName())) {
+            throw new RuntimeException(aClass.getSimpleName() + " 重复");
+        }
+        beans.put(aClass.getSimpleName(), object);
     }
 }
