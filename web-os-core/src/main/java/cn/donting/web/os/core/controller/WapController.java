@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,7 +19,7 @@ public class WapController {
     }
 
     @GetMapping("/test")
-    public Map test(@RequestParam("a") int a) {
+    public Map test(@RequestParam("a") int a, HttpServletRequest request) {
         HashMap<Object, Object> objectObjectHashMap = new HashMap<>();
         objectObjectHashMap.put("a", a);
         objectObjectHashMap.put("test", "adas");

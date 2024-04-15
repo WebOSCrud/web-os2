@@ -1,5 +1,7 @@
 package cn.donting.web.os.core.server;
 
+import org.h2.server.web.WebServlet;
+
 import javax.servlet.*;
 import javax.servlet.descriptor.JspConfigDescriptor;
 import java.io.InputStream;
@@ -13,7 +15,7 @@ import java.util.Set;
 public class JettyServletContext implements ServletContext {
     @Override
     public String getContextPath() {
-        return null;
+        return "/app";
     }
 
     @Override
