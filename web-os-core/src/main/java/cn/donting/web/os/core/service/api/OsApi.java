@@ -5,8 +5,8 @@ import cn.donting.web.os.api.FileSpaceApi;
 import cn.donting.web.os.api.UserApi;
 import cn.donting.web.os.api.WapApi;
 import cn.donting.web.os.api.WebOsApi;
-import cn.donting.web.os.web.annotation.Autowired;
-import cn.donting.web.os.web.annotation.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class OsApi implements WebOsApi {

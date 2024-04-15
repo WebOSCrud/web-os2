@@ -1,8 +1,9 @@
 package cn.donting.web.os.core.controller;
 
-import cn.donting.web.os.web.annotation.GetMapping;
-import cn.donting.web.os.web.annotation.RequestParam;
-import cn.donting.web.os.web.annotation.RestController;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,15 +12,16 @@ import java.util.Map;
 public class WapController {
 
 
-    @GetMapping("/error")
+    @GetMapping("/error1")
     public String error(@RequestParam("a") int a) {
         throw new RuntimeException("error");
     }
+
     @GetMapping("/test")
     public Map test(@RequestParam("a") int a) {
         HashMap<Object, Object> objectObjectHashMap = new HashMap<>();
-        objectObjectHashMap.put("a",a);
-        objectObjectHashMap.put("test","adas");
+        objectObjectHashMap.put("a", a);
+        objectObjectHashMap.put("test", "adas");
         return objectObjectHashMap;
     }
 }

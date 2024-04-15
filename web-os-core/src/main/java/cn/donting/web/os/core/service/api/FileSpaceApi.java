@@ -1,7 +1,7 @@
 package cn.donting.web.os.core.service.api;
 
-import cn.donting.web.os.web.annotation.Service;
 import cn.hutool.core.io.FileUtil;
+import org.springframework.stereotype.Service;
 
 import java.io.File;
 @Service

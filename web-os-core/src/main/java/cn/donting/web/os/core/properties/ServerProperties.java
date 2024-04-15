@@ -1,8 +1,6 @@
 package cn.donting.web.os.core.properties;
 
-import cn.donting.web.os.web.annotation.Properties;
 
-@Properties(prefix = "server")
 public class ServerProperties {
     private int port = 8081;
 
