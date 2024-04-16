@@ -1,11 +1,14 @@
 package cn.donting.web.os.core.service.api;
 
+import cn.donting.web.os.api.UserApi;
 import cn.hutool.core.io.FileUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
 @Service
 public class FileSpaceApi implements cn.donting.web.os.api.FileSpaceApi {
+
 
     public static final File dataDir = new File("./.web-os-data");
     public static final File dbDir = new File(dataDir,"db");
@@ -18,9 +21,12 @@ public class FileSpaceApi implements cn.donting.web.os.api.FileSpaceApi {
         FileUtil.mkdir(usersDir);
     }
 
+    @Autowired
+    UserApi userApi;
+
     @Override
     public File loginUserSpace() {
-        return null;
+        return new File(usersDir,userApi.currentLoginUser().toString());
     }
 
     @Override

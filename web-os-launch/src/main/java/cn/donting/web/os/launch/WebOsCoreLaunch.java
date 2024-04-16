@@ -1,5 +1,6 @@
 package cn.donting.web.os.launch;
 
+import cn.donting.web.os.OsStart;
 import cn.donting.web.os.SpringBootStart;
 import cn.donting.web.os.WebOsCoreClassLoader;
 
@@ -18,11 +19,11 @@ public abstract class WebOsCoreLaunch {
     public void launch(String[] args) throws Exception {
         List<URL> classpathURL = getClasspathURL(file);
         WebOsCoreClassLoader webOsCoreClassLoader = new WebOsCoreClassLoader(classpathURL.toArray(new URL[classpathURL.size()]));
-        Class<?> aClass = webOsCoreClassLoader.loadClass(getMainClass(file)+"$Tun");
-        SpringBootStart springBootStart = (SpringBootStart)aClass.newInstance();
+        Class<?> aClass = webOsCoreClassLoader.loadClass(getMainClass(file));
+        OsStart springBootStart = (OsStart)aClass.newInstance();
         Thread.currentThread().setContextClassLoader(webOsCoreClassLoader);
         // 调用main方法，传入当前类的main方法需要的参数
-        springBootStart.start();
+        springBootStart.start(new String[]{"--spring.output.ansi.enabled=always"});
     }
 
     protected abstract List<URL> getClasspathURL(File file);
