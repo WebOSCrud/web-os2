@@ -6,7 +6,6 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 
 import javax.servlet.ServletContext;
 
-
 public class SpringBootLaunch extends SpringBootServletInitializer implements SpringBootStart{
     private Class mainClass;
     private String[] args;

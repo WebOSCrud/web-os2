@@ -2,6 +2,7 @@
   <configuration default="false" name="WebOsLaunch" type="Application" factoryName="Application" nameIsGenerated="true">
     <option name="MAIN_CLASS_NAME" value="cn.donting.web.os.WebOsLaunch" />
     <module name="web-os2.web-os-launch.main" />
+    <option name="PROGRAM_PARAMETERS" value="--spring.jpa.hibernate.ddl-auto=update --spring.output.ansi.enabled=always" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="cn.donting.web.os.*" />
@@ -11,7 +12,8 @@
     <method v="2">
       <option name="Gradle.BeforeRunTask" enabled="true" tasks="compileJava" externalProjectPath="$PROJECT_DIR$/web-os-api" vmOptions="" scriptParameters="" />
       <option name="Gradle.BeforeRunTask" enabled="true" tasks="classpath.dev" externalProjectPath="$PROJECT_DIR$/web-os-core" vmOptions="" scriptParameters="" />
-      <option name="Gradle.BeforeRunTask" enabled="true" tasks="build" externalProjectPath="$PROJECT_DIR$/web-os-simple-web" vmOptions="" scriptParameters="" />
+      <option name="Gradle.BeforeRunTask" enabled="true" tasks="classpath.dev" externalProjectPath="$PROJECT_DIR$/web-os-wap-test" vmOptions="" scriptParameters="" />
+      <option name="Gradle.BeforeRunTask" enabled="true" tasks="classpath.dev" externalProjectPath="$PROJECT_DIR$/web-os-wap-launch" vmOptions="" scriptParameters="" />
       <option name="Make" enabled="true" />
     </method>
   </configuration>

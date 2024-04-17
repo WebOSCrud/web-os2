@@ -1,0 +1,33 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '2.7.14'
+    id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+}
+
+group = 'cn.donting.web.os'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation ('org.springframework.boot:spring-boot-starter-web')
+
+    compileOnly 'org.projectlombok:lombok:1.18.8'
+    annotationProcessor 'org.projectlombok:lombok:1.18.8'
+}
+
+task 'classpath.dev'(dependsOn: ['classes']){
+    doFirst {
+        def classpath = sourceSets.main.runtimeClasspath
+        def content = "cn.donting.web.os.wap.WapTestApplication\n"
+        classpath.forEach {
+            content+=it.getPath()+"\n";
+        }
+        def file = file('../.web-os-data/install/web-os-wap-test.wev')  // 文件路径相对于项目根目录
+        file.parentFile.mkdirs();
+        file.text = content  // 使用 .text 属性将内容写入文件
+    }
+}

@@ -10,9 +10,20 @@ repositories {
 }
 
 dependencies {
-    compileOnly 'org.springframework.boot:spring-boot-starter:2.7.14'
+    compileOnly 'org.springframework.boot:spring-boot-starter-web:2.7.14'
     compileOnly project(":web-os-launch")
     compileOnly  "javax.servlet:javax.servlet-api:4.0.1"
 
+}
+task 'classpath.dev'(dependsOn: ['classes']){
+    doFirst {
+        def classpath = sourceSets.main.runtimeClasspath
+        def content=""
+        classpath.forEach {
+            content+=it.getPath()+"\n";
+        }
+        def file = file('../web-os-wap-launch.wev')  // 文件路径相对于项目根目录
+        file.text = content  // 使用 .text 属性将内容写入文件
+    }
 }
 

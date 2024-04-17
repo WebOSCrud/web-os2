@@ -13,4 +13,8 @@ public class ArgsSpringApplicationBuilder extends SpringApplicationBuilder {
     public SpringApplication build() {
         return super.build(args);
     }
+
+    public static void main(String[] args) {
+
+    }
 }

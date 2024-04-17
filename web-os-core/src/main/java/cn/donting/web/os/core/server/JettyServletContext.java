@@ -1,6 +1,5 @@
 package cn.donting.web.os.core.server;
 
-import org.h2.server.web.WebServlet;
 
 import javax.servlet.*;
 import javax.servlet.descriptor.JspConfigDescriptor;

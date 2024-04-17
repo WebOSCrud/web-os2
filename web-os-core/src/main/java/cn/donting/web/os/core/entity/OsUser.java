@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 @Data
@@ -18,5 +19,15 @@ public class OsUser extends User{
     @Override
     public String getUsername() {
         return super.getUsername();
+    }
+    @Column
+    @Override
+    public String getDescription() {
+        return super.getDescription();
+    }
+    @Column
+    @Override
+    public Long getCreatTime() {
+        return super.getCreatTime();
     }
 }
