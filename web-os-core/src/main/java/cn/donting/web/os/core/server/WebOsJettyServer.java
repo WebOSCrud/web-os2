@@ -3,7 +3,9 @@ package cn.donting.web.os.core.server;
 import cn.donting.web.os.core.properties.ServerProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jetty.server.Request;
+import org.eclipse.jetty.server.Response;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.ErrorHandler;
 import org.eclipse.jetty.server.session.SessionHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
@@ -25,7 +27,6 @@ import java.util.UUID;
 @Service
 @Slf4j
 public class WebOsJettyServer implements ApplicationRunner, Servlet {
-
     @Autowired
     DispatcherServlet dispatcherServlet;
 
@@ -36,11 +37,13 @@ public class WebOsJettyServer implements ApplicationRunner, Servlet {
         Server server = new Server(serverProperties.getPort());
 
         SessionHandler sessions = new SessionHandler();
+        ErrorHandler  errorHandler = new OsErrorHandler();
 
         ServletContextHandler contextHandler = new ServletContextHandler(server, "/", false, false);
         ServletHolder servletHolder = new ServletHolder(this);
         contextHandler.addServlet(servletHolder, "/");
-        contextHandler.setHandler(sessions);
+        contextHandler.setSessionHandler(sessions);
+        contextHandler.setErrorHandler(errorHandler);
 
         server.setHandler(contextHandler);
         server.start();
@@ -69,21 +72,18 @@ public class WebOsJettyServer implements ApplicationRunner, Servlet {
      */
     @Override
     public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
-        try {
+        String wapId = "os";
 
-            sendWWAuthenticate((HttpServletRequest) req,(HttpServletResponse) res);
-//            Request request = (Request) req;
+            HttpServletRequest servletRequest = (HttpServletRequest) req;
+            HttpServletResponse servletResponse = (HttpServletResponse) res;
+//            sendWWAuthenticate((HttpServletRequest) req,(HttpServletResponse) res);
+            Request request = (Request) req;
+            Response response = (Response) res;
 //            用于指定 request 的 ContextPath。
-//            request.setContextPath("/app");
-//            dispatcherServlet.service(req, res);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-//            ((HttpServletResponse) res).setStatus(404);
-//            req.setAttribute(RequestDispatcher.ERROR_MESSAGE, ex.getMessage());
-//            req.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, 500);
-//            req.getRequestDispatcher("/app/error").forward(req, res);
+            request.setContextPath("/" + wapId);
+            request.setContextPath("/" + wapId);
+            dispatcherServlet.service(req, res);
 
-        }
 
     }
 

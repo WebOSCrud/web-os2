@@ -15,6 +15,8 @@ import javax.servlet.ServletException;
 @SpringBootApplication
 public class WebOsCoreApplication extends SpringBootServletInitializer implements OsStart {
 
+    public static final String OS_ID="os";
+
     private String[] args;
     public static void main(String[] args) throws Exception {
         SpringApplication.run(WebOsCoreApplication.class);

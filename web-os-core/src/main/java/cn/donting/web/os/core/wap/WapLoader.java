@@ -20,7 +20,6 @@ public abstract class WapLoader {
         this.file = file;
         wapClassLoader = loadClassLoader();
         wapInfo = loader();
-
     }
 
     public WapInfo loader() {
@@ -44,6 +43,10 @@ public abstract class WapLoader {
         return wapInfo;
     }
 
+
+    public WapClassLoader getWapClassLoader(){
+        return wapClassLoader;
+    }
     public static WapLoader getWapLoader(File file) {
         if (file.getName().endsWith(".wev")) {
             DevWapLoader devWapLoader = new DevWapLoader(file);

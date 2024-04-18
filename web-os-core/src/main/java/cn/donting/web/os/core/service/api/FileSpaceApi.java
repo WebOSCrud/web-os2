@@ -29,12 +29,22 @@ public class FileSpaceApi implements cn.donting.web.os.api.FileSpaceApi {
      * 自动安装目录
      */
     public static final File installDir = new File(dataDir,"install");
+    /**
+     * 静态资源目录
+     */
+    public static final File staticDir = new File(dataDir,"static");
+    /**
+     * 文件类型 图标文件目录
+     */
+    public static final File fileTypeIconDir = new File(staticDir,"fileType");
     static {
         FileUtil.mkdir(dataDir);
         FileUtil.mkdir(dbDir);
         FileUtil.mkdir(wapDir);
         FileUtil.mkdir(usersDir);
         FileUtil.mkdir(installDir);
+        FileUtil.mkdir(staticDir);
+        FileUtil.mkdir(fileTypeIconDir);
     }
 
     @Autowired

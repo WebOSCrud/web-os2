@@ -1,3 +1,10 @@
 {
-  "id": "wap.test"
+  "id": "wap.test",
+  "fileTypes": [
+    {
+      "extName": "txt",
+      "iconResource": "defAccount.png",
+      "description": "文本文件"
+    }
+  ]
 }

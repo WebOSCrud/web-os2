@@ -4,6 +4,8 @@ import cn.donting.web.os.api.annotation.NonNull;
 import cn.donting.web.os.api.annotation.Nullable;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class WapInfo {
     /**
@@ -34,4 +36,12 @@ public class WapInfo {
      */
     @NonNull
     private int numberVersion;
+    /**
+     * 窗口
+     */
+    private List<WapWindow> wapWindows;
+    /**
+     * 文件类型
+     */
+    private List<FileType> fileTypes;
 }
