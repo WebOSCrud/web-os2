@@ -9,16 +9,13 @@ import cn.donting.web.os.core.domain.dto.CopyURLToFileDto;
 import cn.donting.web.os.core.entity.OsFileType;
 import cn.donting.web.os.core.entity.OsWapInstall;
 import cn.donting.web.os.core.repository.OsFileTypeRepository;
-import cn.donting.web.os.core.repository.OsOsWapInstallRepository;
+import cn.donting.web.os.core.repository.OsWapInstallRepository;
+import cn.donting.web.os.core.service.WapRuntimeService;
+import cn.donting.web.os.core.service.WapService;
 import cn.donting.web.os.core.wap.WapLoader;
-import cn.donting.web.os.core.wap.loader.WapClassLoader;
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.util.URLUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,28 +30,35 @@ import java.util.stream.Collectors;
 @Slf4j
 public class WapApi implements cn.donting.web.os.api.WapApi {
     @Autowired
-    OsOsWapInstallRepository osOsWapInstallRepository;
+    OsWapInstallRepository osOsWapInstallRepository;
     @Autowired
     UserApi userApi;
     @Autowired
     OsFileTypeRepository osFileTypeRepository;
+    @Autowired
+    WapRuntimeService wapRuntimeService;
 
     @Override
     @Transactional
     public synchronized WapInstallInfo install(File file) {
         log.info("install wap file:{}", file);
         WapLoader wapLoader = WapLoader.getWapLoader(file);
-        WapInfo wapInfo = wapLoader.getWapInfo();
+        WapInfo wapInfo = wapLoader.getWapClassLoader().getWapInfo();
         Optional<OsWapInstall> wapInstallOptional = osOsWapInstallRepository.findById(wapInfo.getId());
         WapInstallInfo wapInstallInfo;
+
+        String extName = FileUtil.extName(file.getName());
+        File installFile=new File(FileSpaceApi.wapDir,UUID.randomUUID().toString()+"."+extName);
+
         if (wapInstallOptional.isPresent()) {
-            wapInstallInfo = update(wapLoader);
+            wapInstallInfo = update(wapLoader,installFile);
         } else {
-            wapInstallInfo = firstInstall(wapLoader);
+            wapInstallInfo = firstInstall(wapLoader,installFile);
         }
         updateFileType(wapLoader);
+
         //复制wap 文件到wap 安装目录
-        FileUtil.copy(file, new File(FileSpaceApi.wapDir, file.getName()), true);
+        FileUtil.copy(file, installFile, true);
         file.delete();
         return wapInstallInfo;
     }
@@ -76,16 +80,19 @@ public class WapApi implements cn.donting.web.os.api.WapApi {
      *
      * @param wapLoader
      */
-    private synchronized WapInstallInfo update(WapLoader wapLoader) {
-        log.info("update wap {}", wapLoader.getWapInfo().getId());
-        WapInfo wapInfo = wapLoader.getWapInfo();
+    private synchronized WapInstallInfo update(WapLoader wapLoader,File installFile) {
+        log.info("update wap {}", wapLoader.getWapClassLoader().getWapId());
+        WapInfo wapInfo = wapLoader.getWapClassLoader().getWapInfo();
+        wapRuntimeService.stopWap(wapInfo.getId());
 
         OsWapInstall osWapInstall = osOsWapInstallRepository.findById(wapInfo.getId()).get();
         osWapInstall.setWapInstallInfo(wapInfo);
         osWapInstall.setUpdateTime(System.currentTimeMillis());
         User user = userApi.currentLoginUser();
         osWapInstall.setUpdateUser(user == null ? "sys" : user.getUsername());
-
+        String fileName = osWapInstall.getFileName();
+        new File(FileSpaceApi.installDir,fileName).delete();
+        osWapInstall.setFileName(installFile.getName());
         osOsWapInstallRepository.save(osWapInstall);
         return osWapInstall.getWapInstallInfo();
     }
@@ -94,11 +101,12 @@ public class WapApi implements cn.donting.web.os.api.WapApi {
      * 第一次安装
      *
      * @param wapLoader
+     * @param installFile  安装的目标文件
      */
-    private synchronized WapInstallInfo firstInstall(WapLoader wapLoader) {
-        log.info("firstInstall wap :{}", wapLoader.getWapInfo().getId());
+    private synchronized WapInstallInfo firstInstall(WapLoader wapLoader,File installFile) {
+        log.info("firstInstall wap :{}", wapLoader.getWapClassLoader().getWapId());
 
-        WapInfo wapInfo = wapLoader.getWapInfo();
+        WapInfo wapInfo = wapLoader.getWapClassLoader().getWapInfo();
         OsWapInstall osWapInstall = new OsWapInstall();
         osWapInstall.setWapId(wapInfo.getId());
 
@@ -106,7 +114,7 @@ public class WapApi implements cn.donting.web.os.api.WapApi {
         osWapInstall.setInstallUser(user == null ? "sys" : user.getUsername());
         osWapInstall.setWapInstallInfo(wapInfo);
         osWapInstall.setInstallTime(System.currentTimeMillis());
-
+        osWapInstall.setFileName(installFile.getName());
         osOsWapInstallRepository.save(osWapInstall);
 
         return osWapInstall.getWapInstallInfo();
@@ -114,7 +122,7 @@ public class WapApi implements cn.donting.web.os.api.WapApi {
 
 
     private void updateFileType(WapLoader wapLoader) {
-        WapInfo wapInfo = wapLoader.getWapInfo();
+        WapInfo wapInfo = wapLoader.getWapClassLoader().getWapInfo();
         String wapId = wapInfo.getId();
         List<OsFileType> osFileTypes = osFileTypeRepository.findAllByWapId(wapId);
         osFileTypeRepository.deleteAllByWapId(wapId);

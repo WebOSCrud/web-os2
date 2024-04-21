@@ -16,7 +16,12 @@ public class OsWapInstall {
     @Id
     private String wapId;
 
+    /**
+     * wap.json
+     */
     private String wapInfoStr;
+
+    private String fileName;
 
     /**
      * 安装时间
