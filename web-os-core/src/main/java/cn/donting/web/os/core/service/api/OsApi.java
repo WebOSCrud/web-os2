@@ -16,6 +16,8 @@ public class OsApi implements WebOsApi {
     @Autowired
     FileSpaceApi fileSpaceApi;
 
+    @Autowired
+    WapApi wapApi;
     public OsApi() {
         WebOsLaunch.setWebOsApi(this);
     }
@@ -32,6 +34,6 @@ public class OsApi implements WebOsApi {
 
     @Override
     public WapApi wapApi() {
-        return null;
+        return wapApi;
     }
 }

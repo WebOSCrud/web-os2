@@ -15,6 +15,12 @@ import javax.persistence.Id;
 public class OsUser extends User{
 
     private String password;
+
+    private String nonce;
+    /**
+     * nonce 过期时间
+     */
+    private long nonceExpiredTime;
     @Id
     @Override
     public String getUsername() {

@@ -57,6 +57,6 @@ public class FileSpaceApi implements cn.donting.web.os.api.FileSpaceApi {
 
     @Override
     public File wapSpace(String wapId) {
-        return null;
+        return new File(wapDir,wapId);
     }
 }
