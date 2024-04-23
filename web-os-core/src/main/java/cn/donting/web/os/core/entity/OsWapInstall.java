@@ -20,9 +20,14 @@ public class OsWapInstall {
      * wap.json
      */
     private String wapInfoStr;
-
+    /**
+     * 安装文件
+     */
     private String fileName;
-
+    /**
+     * wap图标url
+     */
+    private String wapIconFileName;
     /**
      * 安装时间
      */

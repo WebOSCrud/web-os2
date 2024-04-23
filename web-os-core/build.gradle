@@ -22,7 +22,8 @@ dependencies {
 //    implementation 'org.xerial:sqlite-jdbc'
 //    implementation 'com.github.gwenn:sqlite-dialect:0.1.2'
 //    implementation 'org.hibernate.orm:hibernate-community-dialects'
-    implementation 'com.h2database:h2:2.1.214'
+    implementation 'com.h2database:h2:1.4.196'
+//    implementation 'com.h2database:h2:2.1.214'
     implementation 'cn.hutool:hutool-core:5.8.26'
     implementation 'org.eclipse.jetty:jetty-webapp:9.4.49.v20220914'
 

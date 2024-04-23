@@ -1,5 +1,6 @@
 {
   "id": "wap.test",
+  "iconResource": "defAccount.png",
   "fileTypes": [
     {
       "extName": "txt",

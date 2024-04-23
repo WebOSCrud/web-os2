@@ -2,7 +2,7 @@
   <configuration default="false" name="WebOsLaunch" type="Application" factoryName="Application" nameIsGenerated="true">
     <option name="MAIN_CLASS_NAME" value="cn.donting.web.os.WebOsLaunch" />
     <module name="web-os2.web-os-launch.main" />
-    <option name="PROGRAM_PARAMETERS" value="--spring.jpa.hibernate.ddl-auto=update --spring.output.ansi.enabled=always" />
+    <option name="PROGRAM_PARAMETERS" value="--spring.output.ansi.enabled=always" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="cn.donting.web.os.*" />

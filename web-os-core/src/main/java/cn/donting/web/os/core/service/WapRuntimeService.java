@@ -46,6 +46,10 @@ public class WapRuntimeService {
         if (wapRuntime != null) {
             return wapRuntime;
         }
+        if(updateLockWapIdSet.contains(wapId)){
+            throw new RuntimeException(wapId+" 正在更新");
+        }
+
         Optional<OsWapInstall> osWapInstallOptional = osWapInstallRepository.findById(wapId);
         if (!osWapInstallOptional.isPresent()) {
             throw new RuntimeException(wapId + " is not install");

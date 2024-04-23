@@ -12,6 +12,7 @@ import cn.donting.web.os.core.repository.OsFileTypeRepository;
 import cn.donting.web.os.core.repository.OsWapInstallRepository;
 import cn.donting.web.os.core.service.WapRuntimeService;
 import cn.donting.web.os.core.service.WapService;
+import cn.donting.web.os.core.util.WapUtil;
 import cn.donting.web.os.core.wap.WapLoader;
 import cn.hutool.core.io.FileUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -48,18 +49,22 @@ public class WapApi implements cn.donting.web.os.api.WapApi {
         WapInstallInfo wapInstallInfo;
 
         String extName = FileUtil.extName(file.getName());
-        File installFile=new File(FileSpaceApi.wapDir,UUID.randomUUID().toString()+"."+extName);
+        File installFile = new File(FileSpaceApi.wapDir, UUID.randomUUID().toString() + "." + extName);
+        wapRuntimeService.updateLockWap(wapInfo.getId());
+        try {
+            if (wapInstallOptional.isPresent()) {
+                wapInstallInfo = update(wapLoader, installFile);
+            } else {
+                wapInstallInfo = firstInstall(wapLoader, installFile);
+            }
+            updateFileType(wapLoader);
 
-        if (wapInstallOptional.isPresent()) {
-            wapInstallInfo = update(wapLoader,installFile);
-        } else {
-            wapInstallInfo = firstInstall(wapLoader,installFile);
+            //复制wap 文件到wap 安装目录
+            FileUtil.copy(file, installFile, true);
+            file.delete();
+        } finally {
+            wapRuntimeService.updateUnlockWap(wapInfo.getId());
         }
-        updateFileType(wapLoader);
-
-        //复制wap 文件到wap 安装目录
-        FileUtil.copy(file, installFile, true);
-        file.delete();
         return wapInstallInfo;
     }
 
@@ -80,7 +85,7 @@ public class WapApi implements cn.donting.web.os.api.WapApi {
      *
      * @param wapLoader
      */
-    private synchronized WapInstallInfo update(WapLoader wapLoader,File installFile) {
+    private synchronized WapInstallInfo update(WapLoader wapLoader, File installFile) {
         log.info("update wap {}", wapLoader.getWapClassLoader().getWapId());
         WapInfo wapInfo = wapLoader.getWapClassLoader().getWapInfo();
         wapRuntimeService.stopWap(wapInfo.getId());
@@ -91,7 +96,7 @@ public class WapApi implements cn.donting.web.os.api.WapApi {
         User user = userApi.currentLoginUser();
         osWapInstall.setUpdateUser(user == null ? "sys" : user.getUsername());
         String fileName = osWapInstall.getFileName();
-        new File(FileSpaceApi.installDir,fileName).delete();
+        new File(FileSpaceApi.installDir, fileName).delete();
         osWapInstall.setFileName(installFile.getName());
         osOsWapInstallRepository.save(osWapInstall);
         return osWapInstall.getWapInstallInfo();
@@ -101,9 +106,9 @@ public class WapApi implements cn.donting.web.os.api.WapApi {
      * 第一次安装
      *
      * @param wapLoader
-     * @param installFile  安装的目标文件
+     * @param installFile 安装的目标文件
      */
-    private synchronized WapInstallInfo firstInstall(WapLoader wapLoader,File installFile) {
+    private synchronized WapInstallInfo firstInstall(WapLoader wapLoader, File installFile) {
         log.info("firstInstall wap :{}", wapLoader.getWapClassLoader().getWapId());
 
         WapInfo wapInfo = wapLoader.getWapClassLoader().getWapInfo();
@@ -115,8 +120,14 @@ public class WapApi implements cn.donting.web.os.api.WapApi {
         osWapInstall.setWapInstallInfo(wapInfo);
         osWapInstall.setInstallTime(System.currentTimeMillis());
         osWapInstall.setFileName(installFile.getName());
+        String iconResource = wapInfo.getIconResource();
+        WapUtil.ResourceInfo wapResourceInfo = WapUtil.getWapResourceInfo(wapLoader.getWapClassLoader(), iconResource);
+        String extName = wapResourceInfo.getExtName();
+        String fileName = UUID.randomUUID() + "." + extName;
+        osWapInstall.setWapIconFileName(fileName);
         osOsWapInstallRepository.save(osWapInstall);
-
+        File file = new File(FileSpaceApi.wapIconDir, fileName);
+        wapResourceInfo.saveFile(file);
         return osWapInstall.getWapInstallInfo();
     }
 
@@ -130,19 +141,19 @@ public class WapApi implements cn.donting.web.os.api.WapApi {
         Map<String, OsFileType> osFileTypeMap = osFileTypes.stream().collect(Collectors.toMap(OsFileType::getExtName, f -> f));
 
         List<FileType> fileTypes = wapInfo.getFileTypes();
-        List<File> deleteFile=new ArrayList<>();
+        List<File> deleteFile = new ArrayList<>();
 
-        List<CopyURLToFileDto> copyURLToFileDtos=new ArrayList<>();
+        List<CopyURLToFileDto> copyURLToFileDtos = new ArrayList<>();
         for (FileType fileType : fileTypes) {
             OsFileType osFileType = osFileTypeMap.get(fileType.getExtName());
-            if(osFileType!=null){
+            if (osFileType != null) {
                 String iconName = osFileType.getIconName();
-                deleteFile.add(new File(FileSpaceApi.fileTypeIconDir,iconName));
+                deleteFile.add(new File(FileSpaceApi.fileTypeIconDir, iconName));
             }
             osFileType = new OsFileType();
             URL resource = wapLoader.getWapClassLoader().getResource(fileType.getIconResource());
-            if(resource==null){
-                throw new RuntimeException("file iconResource not found:"+fileType.getIconResource()+" ");
+            if (resource == null) {
+                throw new RuntimeException("file iconResource not found:" + fileType.getIconResource() + " ");
             }
 
             String resourceName = FileUtil.getName(resource.getFile());
@@ -159,8 +170,8 @@ public class WapApi implements cn.donting.web.os.api.WapApi {
             copyURLToFileDtos.add(copyURLToFileDto);
         }
         for (CopyURLToFileDto copyURLToFileDto : copyURLToFileDtos) {
-            try(InputStream inputStream = copyURLToFileDto.getSource().openStream()){
-                FileUtil.writeFromStream(inputStream,copyURLToFileDto.getTarget());
+            try (InputStream inputStream = copyURLToFileDto.getSource().openStream()) {
+                FileUtil.writeFromStream(inputStream, copyURLToFileDto.getTarget());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

@@ -19,10 +19,11 @@ public class OsSetting {
     public static final String DEF_DESKTOP_WAP_ID="def_desktop_wap_id";
 
     @Id
+    @Column(name = "`key`")
     private String key;
 
     private String wapId;
 
-    @Column(length = 512)
+    @Column(length = 512,name = "`value`")
     private String value;
 }

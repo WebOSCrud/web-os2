@@ -37,6 +37,7 @@ public class FileSpaceApi implements cn.donting.web.os.api.FileSpaceApi {
      * 文件类型 图标文件目录
      */
     public static final File fileTypeIconDir = new File(staticDir,"fileType");
+    public static final File wapIconDir = new File(staticDir,"wapIcon");
     static {
         FileUtil.mkdir(dataDir);
         FileUtil.mkdir(dbDir);
@@ -45,6 +46,7 @@ public class FileSpaceApi implements cn.donting.web.os.api.FileSpaceApi {
         FileUtil.mkdir(installDir);
         FileUtil.mkdir(staticDir);
         FileUtil.mkdir(fileTypeIconDir);
+        FileUtil.mkdir(wapIconDir);
     }
 
     @Autowired

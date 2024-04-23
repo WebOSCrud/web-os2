@@ -29,7 +29,11 @@ public class WebOsCoreApplication extends SpringBootServletInitializer implement
 
     @Override
     protected WebApplicationContext run(SpringApplication application) {
-        return (WebApplicationContext) application.run(args);
+        try {
+            return (WebApplicationContext) application.run(args);
+        }catch (Exception ex){
+            return null;
+        }
     }
 
     @Override
